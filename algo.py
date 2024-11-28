@@ -1,17 +1,51 @@
+''' 
+Most important factors of algorithm:
+1. Weights
+2. Loss formula for role placement (deteremines what factors merit people getting position they want)
+
+
+'''
+
 import pandas as pd
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, value
+
+# WEIGHTS
+
+# Define weights for score, ABA semester, and year
+score_weight = 2   # Weight for score
+team_pref_weight = 1  # Weight for team preference
+role_pref_weight = 1  # Weight for role preference
+semester_weight = 1  # Weight for ABA Semester
+year_weight = 1  # Weight for Year
+
+
+
+
+# DataFrame Setup
 
 # Load the CSV file
 file_path = 'data.csv'  # Update with your file path if needed
 data = pd.read_csv(file_path)
 
 # Parse data into a usable format for optimization
-candidates = data[['Name', 'Team Preference', 'Role Preference', 'Score']]
+candidates = data[['Name', 'Team Preference', 'Role Preference', 'Score', 'ABA Semester', 'Year']]
 # Remove all spaces after commas in the 'Team Preference' column
 candidates['Team Preference'] = candidates['Team Preference'].str.replace(' ', '', regex=False)
 
 team_list = ['BD', 'FIN', 'MKT', 'NPO', 'STRAT']
 role_list = ['PM', 'SC', 'RC']
+
+# Normalize ABA Semester and Year for weighting purposes (optional)
+max_semester = candidates['ABA Semester'].max()
+max_year = candidates['Year'].max()
+
+candidates['ABA Semester Norm'] = candidates['ABA Semester'] / max_semester
+candidates['Year Norm'] = candidates['Year'] / max_year
+
+
+
+
+# LP Problem setup
 
 # Create decision variables for assigning candidates to teams and roles
 assignment = LpVariable.dicts(
@@ -33,20 +67,35 @@ team_preference_points = {
     for team in team_list
 }
 
+# Calculate role preference points with normalized weights
 role_preference_points = {
-    role: {name: (1 if role == role_pref else -5) for name, role_pref in zip(candidates['Name'], candidates['Role Preference'])}
+    role: {
+        name: (
+            1 if role == role_pref else  # No loss for preferred role
+            -10 * aba_norm * year_norm if role_pref == 'PM' and role == 'SC' else  # Small loss for PM prefers SC
+            -100 * aba_norm * year_norm if role_pref == 'PM' and role == 'RC' else  # Huge loss for PM prefers RC
+            -100 * aba_norm * year_norm if role_pref == 'SC' and role == 'PM' else  # Huge loss for SC prefers PM
+            -10 * aba_norm * year_norm if role_pref == 'SC' and role == 'RC' else  # Small loss for SC prefers RC
+            -100 * aba_norm * year_norm if role_pref == 'RC' else  # Huge loss for RC prefers any other role
+            0  # Default penalty
+        )
+        for name, role_pref, aba_norm, year_norm in zip(
+            candidates['Name'],
+            candidates['Role Preference'],
+            candidates['ABA Semester Norm'],
+            candidates['Year Norm']
+        )
+    }
     for role in role_list
 }
 
-score_weight = 1   # Weight for score (higher values prioritize score more)
-team_pref_weight = 1  # Weight for team preference
-role_pref_weight = 1  # Weight for role preference
-
-# Define the objective function
+# Objective Function
 prob += lpSum(
     assignment[(name, team, role)] *
     (
         score_weight * float(score) +
+        # semester_weight * candidates.loc[candidates['Name'] == name, 'ABA Semester Norm'].values[0] +
+        # year_weight * candidates.loc[candidates['Name'] == name, 'Year Norm'].values[0] +
         team_pref_weight * team_preference_points[team][name] +
         role_pref_weight * role_preference_points[role][name]
     )
