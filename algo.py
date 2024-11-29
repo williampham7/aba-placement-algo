@@ -12,7 +12,7 @@ from pulp import LpProblem, LpVariable, LpMaximize, lpSum, value
 # WEIGHTS
 
 # Define weights for score, ABA semester, and year
-score_weight = 2   # Weight for score
+score_weight = 1   # Weight for score
 team_pref_weight = 1  # Weight for team preference
 role_pref_weight = 1  # Weight for role preference
 semester_weight = 1  # Weight for ABA Semester
@@ -72,16 +72,17 @@ role_preference_points = {
     role: {
         name: (
             1 if role == role_pref else  # No loss for preferred role
-            -10 * aba_norm * year_norm if role_pref == 'PM' and role == 'SC' else  # Small loss for PM prefers SC
+            -5 * score * aba_norm * year_norm if role_pref == 'PM' and role == 'SC' else  # Small loss for PM prefers SC
             -100 * aba_norm * year_norm if role_pref == 'PM' and role == 'RC' else  # Huge loss for PM prefers RC
             -100 * aba_norm * year_norm if role_pref == 'SC' and role == 'PM' else  # Huge loss for SC prefers PM
-            -10 * aba_norm * year_norm if role_pref == 'SC' and role == 'RC' else  # Small loss for SC prefers RC
+            -5 * score * aba_norm * year_norm if role_pref == 'SC' and role == 'RC' else  # Small loss for SC prefers RC
             -100 * aba_norm * year_norm if role_pref == 'RC' else  # Huge loss for RC prefers any other role
             0  # Default penalty
         )
-        for name, role_pref, aba_norm, year_norm in zip(
+        for name, role_pref, score, aba_norm, year_norm in zip(
             candidates['Name'],
             candidates['Role Preference'],
+            candidates['Score'],
             candidates['ABA Semester Norm'],
             candidates['Year Norm']
         )
