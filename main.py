@@ -1,4 +1,10 @@
-from ui_window import create_ui
+from ui_window import TeamGenerator
 
 if __name__ == "__main__":
-    create_ui()
+    tg = TeamGenerator()
+    tg.run()
+
+'''
+to do list:
+- 
+'''
