@@ -28,7 +28,7 @@ file_path = 'data.csv'  # Update with your file path if needed
 data = pd.read_csv(file_path)
 
 # Parse data into a usable format for optimization
-candidates = data[['Name', 'Team Preference', 'Role Preference', 'Score', 'ABA Semester', 'Year']]
+candidates = data[['Name', 'Team Preference', 'Role Preference', 'Score', 'ABA Semester', 'School Year']]
 # Remove all spaces after commas in the 'Team Preference' column
 candidates['Team Preference'] = candidates['Team Preference'].str.replace(' ', '', regex=False)
 
@@ -37,10 +37,10 @@ role_list = ['PM', 'SC', 'RC']
 
 # Normalize ABA Semester and Year for weighting purposes (optional)
 max_semester = candidates['ABA Semester'].max()
-max_year = candidates['Year'].max()
+max_year = candidates['School Year'].max()
 
 candidates['ABA Semester Norm'] = candidates['ABA Semester'] / max_semester
-candidates['Year Norm'] = candidates['Year'] / max_year
+candidates['School Year Norm'] = candidates['School Year'] / max_year
 
 
 
@@ -84,7 +84,7 @@ role_preference_points = {
             candidates['Role Preference'],
             candidates['Score'],
             candidates['ABA Semester Norm'],
-            candidates['Year Norm']
+            candidates['School Year Norm']
         )
     }
     for role in role_list
@@ -96,7 +96,7 @@ prob += lpSum(
     (
         score_weight * float(score) +
         # semester_weight * candidates.loc[candidates['Name'] == name, 'ABA Semester Norm'].values[0] +
-        # year_weight * candidates.loc[candidates['Name'] == name, 'Year Norm'].values[0] +
+        # year_weight * candidates.loc[candidates['Name'] == name, 'School Year Norm'].values[0] +
         team_pref_weight * team_preference_points[team][name] +
         role_pref_weight * role_preference_points[role][name]
     )
@@ -144,7 +144,7 @@ for index, row in candidates.iterrows():
                     "Team": team,
                     "Role": role,
                     "Team Rank": f"{team_rank}{'st' if team_rank == 1 else 'nd' if team_rank == 2 else 'rd' if team_rank == 3 else ''}",
-                    "Got Preferred Role": role_match
+                    "Preferred Role": role_match
                 })
 
 # Create a DataFrame to display the assignments
