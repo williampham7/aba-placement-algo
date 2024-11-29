@@ -62,8 +62,8 @@ prob = LpProblem("Team_Assignment_Problem", LpMaximize)
 # Objective function: Maximize the preferences and use scores for tie-breaking
 # Preference scoring: 3 points for 1st preference, 2 for 2nd, 1 for 3rd
 team_preference_points = {
-    team: {name: (3 - preferences.index(team)) if team in preferences else -1
-           for name, preferences in zip(candidates['Name'], candidates['Team Preference'].str.split(','))}
+    team: {name: (3 - preferences.index(team)) * score / 5 if team in preferences else -1
+           for name, preferences, score in zip(candidates['Name'], candidates['Team Preference'].str.split(','), candidates['Score'])}
     for team in team_list
 }
 
