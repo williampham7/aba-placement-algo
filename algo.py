@@ -1,8 +1,9 @@
 ''' 
-Most important factors of algorithm:
-1. Weights
-2. Loss formula for role placement (deteremines what factors merit people getting position they want)
-
+still to add:
+UI window
+- option to download template to enter data
+- upload data and run LP
+- view results
 
 '''
 
