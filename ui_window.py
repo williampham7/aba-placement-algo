@@ -15,6 +15,8 @@ class TeamGenerator:
         style = ttk.Style()
         #set_style(style)
 
+        self.input_path = ''
+
         # Create the home page
         self.home_page()
 
@@ -108,6 +110,10 @@ class TeamGenerator:
         )
         solve_button.pack(pady=(40, 10))
 
+        # Status Label
+        self.process_status_label = ttk.Label(self.app, text="", bootstyle=INFO)
+        self.process_status_label.pack(pady=10)
+
     def upload_data(self):
         file_path = filedialog.askopenfilename(filetypes=[("Spreadsheet Files", "*.xlsx *.csv")])
         if file_path:
@@ -115,12 +121,17 @@ class TeamGenerator:
             self.input_status_label.config(text=f"Selected Input File: {os.path.basename(file_path)}")
 
     def solve_lp(self):
-        solver = TeamAssignmentOptimizer(self.input_path)
-        reuslts = solver.solve([])
+        if self.input_path:
+            self.process_status_label.config(text="Processing...")
+            solver = TeamAssignmentOptimizer(self.input_path)
+            results = solver.solve([])
+        else:
+            self.process_status_label.config(text="No file selected")
+
 
     def show_results(self):
         pass
-    
+
     def show_info(self):
         """Placeholder function for showing info."""
         print("Info")
