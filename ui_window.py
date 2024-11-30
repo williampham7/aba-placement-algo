@@ -3,7 +3,7 @@ from ttkbootstrap.constants import *
 from tkinter import filedialog, messagebox
 from algo import TeamAssignmentOptimizer
 from png import logo
-import os, time, webbrowser
+import os, time, webbrowser, shutil
 from datetime import datetime
 from results_page import display_team_results
 
@@ -83,27 +83,26 @@ class TeamGenerator:
         info_button.place(relx=1.0, x=-10, y=10, anchor="ne")
 
     def show_directions(self):
-        """Placeholder function for showing directions."""
-        print("Directions")
+        self.start_new_window()
 
     def download_template(self):
-        """Placeholder function for downloading the Excel template."""
-        print("Downloading Template")
+        template_path = 'files/candidates_template.csv'
+
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".csv",
+            filetypes=[("CSV files", "*.csv")],
+            initialfile="candidates_template.csv",
+            title="Save Template File"
+        )
+
+        if file_path:
+            shutil.copyfile(template_path, file_path)
 
     def generate_teams(self):
-        self.clear_window()
-
-        # Back button (top-left corner)
-        back_button = ttk.Button(
-            self.app,
-            text="Back",  # Unicode for info symbol
-            bootstyle=SECONDARY,
-            command=self.home_page
-        )
-        back_button.place(relx=0.0, x=10, y=10, anchor="nw")
+        self.start_new_window()
 
         top_frame = ttk.Frame(self.app)
-        top_frame.pack(side = TOP, pady = (40,10))
+        top_frame.pack(side = TOP, pady = (55,10))
 
         upload_data_button = ttk.Button(
             top_frame,
@@ -142,16 +141,18 @@ class TeamGenerator:
         # Initialize variables controlled by sliders
         self.var1 = ttk.IntVar(value=50)
         self.var2 = ttk.IntVar(value=50)
-        self.var3 = ttk.IntVar(value=50)
-        self.var4 = ttk.IntVar(value=50)
-        self.var5 = ttk.IntVar(value=50)
+        #self.var3 = ttk.IntVar(value=50)
+        #self.var4 = ttk.IntVar(value=50)
+        #self.var5 = ttk.IntVar(value=50)
 
         # Create sliders and labels
         self.create_slider("Variable 1", self.var1)
         self.create_slider("Variable 2", self.var2)
-        self.create_slider("Variable 3", self.var3)
-        self.create_slider("Variable 4", self.var4)
-        self.create_slider("Variable 5", self.var5)
+        #self.create_slider("Variable 3", self.var3)
+        #self.create_slider("Variable 4", self.var4)
+        #self.create_slider("Variable 5", self.var5)
+
+    def create_results_buttons(self):
 
         bottom_frame = ttk.Frame(self.app)
         bottom_frame.pack(side = TOP, pady = 20)
@@ -190,7 +191,6 @@ class TeamGenerator:
             )
             slider.pack(fill=X, pady=(0, 10))  # Fill the available space horizontally
 
-
     def upload_data(self):
         file_path = filedialog.askopenfilename(filetypes=[("Spreadsheet Files", "*.xlsx *.csv")])
         if file_path:
@@ -203,6 +203,7 @@ class TeamGenerator:
             solver = TeamAssignmentOptimizer(self.input_path)
             self.results = solver.solve([])
             self.process_status_label.config(text="Finished ✅")
+            self.create_results_buttons()
 
         else:
             self.process_status_label.config(text="No file selected")
@@ -234,8 +235,19 @@ class TeamGenerator:
                 webbrowser.open(f"file://{file_path}")
 
     def show_info(self):
-        """Placeholder function for showing info."""
-        print("Info")
+        self.start_new_window()
+
+    def start_new_window(self):
+        self.clear_window()
+
+        # Back button (top-left corner)
+        back_button = ttk.Button(
+            self.app,
+            text="Back",  # Unicode for info symbol
+            bootstyle=SECONDARY,
+            command=self.home_page
+        )
+        back_button.place(relx=0.0, x=10, y=10, anchor="nw")
 
     def run(self):
         """Runs the application."""
