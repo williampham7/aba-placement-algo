@@ -23,7 +23,7 @@ def display_team_results(results_df):
     rows = (num_teams + 1) // cols
 
     # Create figure and axes
-    fig, axes = plt.subplots(rows, cols, figsize=(12, rows * 3))
+    fig, axes = plt.subplots(rows, cols, figsize=(8, rows * 2.5))
     axes = axes.flatten()
 
     # Loop through teams and plot their data
@@ -44,12 +44,12 @@ def display_team_results(results_df):
         roles = team_data.groupby('Role')['Name'].apply(list)
 
         # Display each role and its members with consistent spacing
-        y_pos = 0.76
+        y_pos = 0.7
         for role, members in roles.items():
             ax.text(0.05, y_pos, f"{role}:", fontsize=12, fontweight='bold', ha='left', va='top')
             for member in members:
-                ax.text(0.12, y_pos, member, fontsize=11, ha='left', va='top')
-                y_pos -= 0.08
+                ax.text(0.17, y_pos, member, fontsize=11, ha='left', va='top')
+                y_pos -= 0.1
             y_pos -= 0.04  # Add spacing between roles
 
     # Remove unused axes
@@ -57,5 +57,5 @@ def display_team_results(results_df):
         ax.axis('off')
 
     # Adjust layout to reduce overlapping
-    plt.tight_layout(pad=2.0)
+    plt.tight_layout(pad=0.5)
     plt.show()

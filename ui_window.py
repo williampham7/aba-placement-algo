@@ -102,20 +102,40 @@ class TeamGenerator:
         )
         back_button.place(relx=0.0, x=10, y=10, anchor="nw")
 
-        """Creates the home page UI components."""
-        # Directions button
+        top_frame = ttk.Frame(self.app)
+        top_frame.pack(side = TOP, pady = (40,10))
+
         upload_data_button = ttk.Button(
-            self.app,
+            top_frame,
             text="Upload Data",
             bootstyle=WARNING,
             width=20,
             command=self.upload_data
         )
-        upload_data_button.pack(pady=(40, 10))
+        upload_data_button.grid(row=0, column=0, padx=10, pady=5)  # Placed at (0, 0)
 
-        self.input_status_label = ttk.Label(self.app, text="Select Input File...", bootstyle=INFO)
-        self.input_status_label.pack(pady=10)
+        # Input status label
+        self.input_status_label = ttk.Label(
+            top_frame,
+            text="Select Input File...",
+            bootstyle=INFO
+        )
+        self.input_status_label.grid(row=1, column=0, padx=10, pady=5)  # Placed at (0, 1)
 
+        solve_button = ttk.Button(
+            top_frame,
+            text="Generate Teams",
+            bootstyle=DANGER,
+            width=20,
+            command = lambda: self.solve_lp()
+        )
+        solve_button.grid(row=0, column=1, padx=10, pady=5)
+
+        # Status Label
+        self.process_status_label = ttk.Label(top_frame, text="", bootstyle=INFO)
+        self.process_status_label.grid(row=1, column=1, padx=10, pady=5)
+
+        # Sliders
         self.slider_frame = ttk.Frame(self.app)
         self.slider_frame.pack(pady=10)
 
@@ -132,19 +152,6 @@ class TeamGenerator:
         self.create_slider("Variable 3", self.var3)
         self.create_slider("Variable 4", self.var4)
         self.create_slider("Variable 5", self.var5)
-
-        solve_button = ttk.Button(
-            self.app,
-            text="Generate Teams",
-            bootstyle=DANGER,
-            width=20,
-            command = lambda: self.solve_lp()
-        )
-        solve_button.pack(pady=(40, 10))
-
-        # Status Label
-        self.process_status_label = ttk.Label(self.app, text="", bootstyle=INFO)
-        self.process_status_label.pack(pady=10)
 
     def create_slider(self, label_text, variable):
             """Helper to create a slider with a label."""

@@ -101,6 +101,8 @@ class TeamAssignmentOptimizer:
         for team in self.team_list:
             prob += lpSum(assignment[(name, team, 'PM')] for name in self.data['Name']) == 2, f"PM_Constraint_{team}"
             prob += lpSum(assignment[(name, team, 'SC')] for name in self.data['Name']) == 2, f"SC_Constraint_{team}"
+            prob += lpSum(assignment[(name, team, 'RC')] for name in self.data['Name']) <= 3, f"Max_RC_Constraint_{team}"
+
 
         # Ensure everyone is assigned to exactly one team and one role
         for name in self.data['Name']:
