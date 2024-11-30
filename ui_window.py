@@ -6,6 +6,7 @@ from png import logo
 import os, time, webbrowser, shutil
 from datetime import datetime
 from results_page import display_team_results
+from directions import directions_page
 
 from style import set_style
 
@@ -73,17 +74,9 @@ class TeamGenerator:
         )
         generate_teams_button.pack(pady=10)
 
-        # Info button (top-right corner)
-        info_button = ttk.Button(
-            self.app,
-            text="\u2139",  # Unicode for info symbol
-            bootstyle=SECONDARY,
-            command=self.show_info
-        )
-        info_button.place(relx=1.0, x=-10, y=10, anchor="ne")
-
     def show_directions(self):
         self.start_new_window()
+        directions_page(self)
 
     def download_template(self):
         template_path = 'files/candidates_template.csv'
@@ -233,9 +226,6 @@ class TeamGenerator:
                 os.startfile(file_path)
             elif os.name == 'posix':  # macOS or Linux
                 webbrowser.open(f"file://{file_path}")
-
-    def show_info(self):
-        self.start_new_window()
 
     def start_new_window(self):
         self.clear_window()
