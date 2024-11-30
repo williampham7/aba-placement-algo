@@ -9,13 +9,13 @@ class TeamAssignmentOptimizer:
         self.role_list = ['PM', 'SC', 'RC']
         self.prob = LpProblem("Team_Assignment_Problem", LpMaximize)
         self.assignments = []
-        self.weights = {
-            'score_weight': 1,
-            'team_pref_weight': 1,
-            'role_pref_weight': 1,
-            'semester_weight': 1,
-            'year_weight': 1,
-        }
+        # self.weights = {
+        #     'score_weight': 1,
+        #     'team_pref_weight': 1,
+        #     'role_pref_weight': 1,
+        #     'semester_weight': 1,
+        #     'year_weight': 1,
+        # }
         self.assignment_vars = None
         self.prepare_data()
 
@@ -86,7 +86,7 @@ class TeamAssignmentOptimizer:
         prob += lpSum(
             assignment[(name, team, role)] *
             (
-                score_weight * float(score) +
+                #score_weight * float(score) +
                 # semester_weight * self.data.loc[self.data['Name'] == name, 'ABA Semester Norm'].values[0] +
                 # year_weight * self.data.loc[self.data['Name'] == name, 'School Year Norm'].values[0] +
                 team_pref_weight * team_preference_points[team][name] +
@@ -141,5 +141,7 @@ class TeamAssignmentOptimizer:
         # Create a DataFrame to display the assignments
         assignments_df = pd.DataFrame(assignments)
         assignments_df = assignments_df.sort_values(by=['Team', 'Role'], ascending=[True, True])
+
+        print(assignments_df)
 
         return assignments_df

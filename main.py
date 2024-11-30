@@ -6,5 +6,8 @@ if __name__ == "__main__":
 
 '''
 to do list:
+- implement sliders
+- refine algo to be able to customize weights
+- results displayed in excel or in another format
 - 
 '''
