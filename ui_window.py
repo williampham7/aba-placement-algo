@@ -15,7 +15,7 @@ class TeamGenerator:
         # Initialize the main application window
         self.app = ttk.Window(themename="litera")
         self.app.title("Team Generator Tool")
-        self.app.geometry("600x520")
+        self.center_window(600, 520)
         style = ttk.Style()
         #set_style(style)
 
@@ -23,6 +23,18 @@ class TeamGenerator:
 
         # Create the home page
         self.home_page()
+
+    def center_window(self, width, height):
+        """Center the window on the screen."""
+        screen_width = self.app.winfo_screenwidth()
+        screen_height = self.app.winfo_screenheight()
+
+        # Calculate the position for the window to appear centered
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - int(height // 1.8)
+
+        # Set the geometry with the new x, y positions
+        self.app.geometry(f"{width}x{height}+{x}+{y}")
 
     def clear_window(self):
         for widget in self.app.winfo_children():
@@ -47,7 +59,7 @@ class TeamGenerator:
         # Directions button
         directions_button = ttk.Button(
             self.app,
-            text="See Directions",
+            text="Directions & Info",
             bootstyle=PRIMARY,
             width=20,
             command=self.show_directions

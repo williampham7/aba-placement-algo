@@ -60,20 +60,6 @@ def directions_page(self):
         "4. Click 'Generate Teams' and select the filled-out Excel file.",
         "5. Wait for the tool to generate optimized teams based on the input data.",
         "6. Review the generated teams and export them if needed.",
-        "7. If you need further assistance, click 'See Directions' for guidance.",
-        "1. Click 'Download Excel Template' to download the required input file.",
-        "2. Fill out the Excel template with team member details.",
-        "3. Save the template in a location you can easily access.",
-        "4. Click 'Generate Teams' and select the filled-out Excel file.",
-        "5. Wait for the tool to generate optimized teams based on the input data.",
-        "6. Review the generated teams and export them if needed.",
-        "7. If you need further assistance, click 'See Directions' for guidance.",
-        "1. Click 'Download Excel Template' to download the required input file.",
-        "2. Fill out the Excel template with team member details.",
-        "3. Save the template in a location you can easily access.",
-        "4. Click 'Generate Teams' and select the filled-out Excel file.",
-        "5. Wait for the tool to generate optimized teams based on the input data.",
-        "6. Review the generated teams and export them if needed.",
         "7. If you need further assistance, click 'See Directions' for guidance."
     ]
 
