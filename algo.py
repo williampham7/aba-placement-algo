@@ -149,7 +149,5 @@ class TeamAssignmentOptimizer:
 
         # Sort by Team and then by the custom Role order
         assignments_df = assignments_df.sort_values(by=['Team', 'Role'], ascending=[True, True])
-
-        print(assignments_df)
-
+        
         return assignments_df

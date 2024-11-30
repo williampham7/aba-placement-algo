@@ -44,7 +44,7 @@ def display_team_results(results_df):
         roles = team_data.groupby('Role')['Name'].apply(list)
 
         # Display each role and its members with consistent spacing
-        y_pos = 0.7
+        y_pos = 0.75
         for role, members in roles.items():
             ax.text(0.05, y_pos, f"{role}:", fontsize=12, fontweight='bold', ha='left', va='top')
             for member in members:

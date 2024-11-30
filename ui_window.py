@@ -153,6 +153,27 @@ class TeamGenerator:
         self.create_slider("Variable 4", self.var4)
         self.create_slider("Variable 5", self.var5)
 
+        bottom_frame = ttk.Frame(self.app)
+        bottom_frame.pack(side = TOP, pady = 20)
+
+        view_results_button = ttk.Button(
+            bottom_frame,
+            text="View Results",
+            bootstyle=INFO,
+            width=20,
+            command = lambda: self.call_display()
+        )
+        view_results_button.grid(row=0, column=0, padx=10, pady=5)  # Placed at (0, 0)
+
+        save_results_button = ttk.Button(
+            bottom_frame,
+            text="Save Results",
+            bootstyle=SUCCESS,
+            width=20,
+            command = lambda: self.save_results(self.results)
+        )
+        save_results_button.grid(row=0, column=1, padx=10, pady=5)
+
     def create_slider(self, label_text, variable):
             """Helper to create a slider with a label."""
             label = ttk.Label(self.slider_frame, text=label_text, font=("Helvetica", 12))
@@ -180,16 +201,14 @@ class TeamGenerator:
         if self.input_path:
             self.process_status_label.config(text="Processing...")
             solver = TeamAssignmentOptimizer(self.input_path)
-            results = solver.solve([])
-            
-            time.sleep(1)
+            self.results = solver.solve([])
             self.process_status_label.config(text="Finished ✅")
-
-            display_team_results(results)
-            # self.save_results(results)
 
         else:
             self.process_status_label.config(text="No file selected")
+
+    def call_display(self):
+        display_team_results(self.results)
 
 
     def save_results(self, results):
