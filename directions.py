@@ -30,9 +30,18 @@ def directions_page(self):
         lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
     )
 
-    # Enable scrolling with the mouse wheel (adjust for macOS)
-    scrollable_frame.bind_all("<MouseWheel>", lambda e: on_mouse_scroll(e, canvas))
-    scrollable_frame.bind_all("<Shift-MouseWheel>", lambda e: on_shift_scroll(e, canvas))
+    def _on_mouse_wheel(event):
+        if event.num == 5 or event.delta < 0:
+            canvas.yview_scroll(1, "units")
+        if event.num == 4 or event.delta > 0:
+            canvas.yview_scroll(-1, "units")
+
+    # Enable scrolling with the mouse wheel (adjusted for macOS touchpad)
+    canvas.bind_all("<MouseWheel>", _on_mouse_wheel)  # Windows and Linux
+    canvas.bind_all("<Button-4>", _on_mouse_wheel)    # macOS (older systems)
+    canvas.bind_all("<Button-5>", _on_mouse_wheel)    # macOS (older systems)
+    canvas.bind_all("<Shift-MouseWheel>", lambda e: "break")  # Prevent horizontal scrolling
+
 
     # Directions Header
     header_label = tb.Label(
@@ -80,13 +89,8 @@ def directions_page(self):
         ).pack(anchor="w", pady=5, padx=20)
 
 def on_mouse_scroll(event, canvas):
-    """Handle mouse wheel scroll events for macOS and other platforms."""
-    if event.state == 0:  # Vertical scrolling
-        canvas.yview_scroll(-1 * (event.delta // 120), "units")
-    elif event.state == 1:  # Horizontal scrolling (Shift key pressed)
-        canvas.xview_scroll(-1 * (event.delta // 120), "units")
-
-
-def on_shift_scroll(event, canvas):
-    """Handle shift + mouse wheel events for horizontal scrolling."""
-    canvas.xview_scroll(-1 * (event.delta // 120), "units")
+    """Handle mouse wheel scroll events for macOS touchpad."""
+    # On macOS, event.delta is a large number, and positive means scrolling up.
+    # The factor -1 is used to invert the direction correctly for macOS.
+    scroll_amount = -1 if event.delta > 0 else 1
+    canvas.yview_scroll(scroll_amount, "units")
