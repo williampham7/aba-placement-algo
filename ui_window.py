@@ -3,8 +3,9 @@ from ttkbootstrap.constants import *
 from tkinter import filedialog, messagebox
 from algo import TeamAssignmentOptimizer
 from png import logo
-import os
-import time
+import os, time, webbrowser
+from datetime import datetime
+from results_page import display_team_results
 
 from style import set_style
 
@@ -177,12 +178,34 @@ class TeamGenerator:
             time.sleep(1)
             self.process_status_label.config(text="Finished ✅")
 
+            display_team_results(results)
+            # self.save_results(results)
+
         else:
             self.process_status_label.config(text="No file selected")
 
 
-    def show_results(self):
-        pass
+    def save_results(self, results):
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        default_file_name = f"Team_Assignments_{timestamp}.csv"
+
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".csv",
+            filetypes=[("CSV Files", "*.csv")],
+            initialfile=default_file_name,
+            title="Save File As"
+        )
+
+        if file_path:  # If the user selects a location
+            # Save the DataFrame to the chosen location
+            results.to_csv(file_path, index=False)
+            print(f"Sorted assignments saved to {file_path}.")
+            
+            # Automatically open the CSV file in the default viewer
+            if os.name == 'nt':  # Windows
+                os.startfile(file_path)
+            elif os.name == 'posix':  # macOS or Linux
+                webbrowser.open(f"file://{file_path}")
 
     def show_info(self):
         """Placeholder function for showing info."""

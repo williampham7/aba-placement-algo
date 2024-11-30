@@ -140,6 +140,12 @@ class TeamAssignmentOptimizer:
 
         # Create a DataFrame to display the assignments
         assignments_df = pd.DataFrame(assignments)
+
+        # Define a custom sort order for the Role column
+        role_order = ["PM", "SC", "RC"]
+        assignments_df['Role'] = pd.Categorical(assignments_df['Role'], categories=role_order, ordered=True)
+
+        # Sort by Team and then by the custom Role order
         assignments_df = assignments_df.sort_values(by=['Team', 'Role'], ascending=[True, True])
 
         print(assignments_df)
