@@ -204,12 +204,15 @@ class TeamGenerator:
 
     def solve_lp(self):
         if self.input_path:
-            self.process_status_label.config(text="Processing...")
-            solver = TeamAssignmentOptimizer(self.input_path)
-            self.results = solver.solve([])
-            self.process_status_label.config(text="Finished ✅")
-            self.create_results_buttons()
-
+            try:
+                self.process_status_label.config(text="Processing...")
+                solver = TeamAssignmentOptimizer(self.input_path)
+                self.results = solver.solve([])
+                self.process_status_label.config(text="Finished ✅")
+                self.create_results_buttons()
+            except Exception as e:
+                self.process_status_label.config(text="Error occurred ❌")
+                messagebox.showerror("Error", f"An error occurred while processing:\n{str(e)}")
         else:
             self.process_status_label.config(text="No file selected")
 
