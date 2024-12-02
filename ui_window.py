@@ -15,7 +15,7 @@ class TeamGenerator:
         # Initialize the main application window
         self.app = ttk.Window(themename="litera")
         self.app.title("Team Generator Tool")
-        self.center_window(600, 520)
+        self.center_window(700, 520)
         style = ttk.Style()
         #set_style(style)
 
