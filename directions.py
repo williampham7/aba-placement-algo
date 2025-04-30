@@ -54,13 +54,13 @@ def directions_page(self):
 
     # Instructions List
     directions = [
-        "1. Click 'Download Excel Template' to download the required input file.",
-        "2. Fill out the Excel template with team member details.",
+        "1. Click 'Download Template & Example' to download the csv files.",
+        "2. Fill out the Excel template with team member details. Refer to the example for guidance.",
         "3. Save the template in a location you can easily access.",
-        "4. Click 'Generate Teams' and select the filled-out Excel file.",
+        "4. Click 'Generate Teams' and select the filled-out spreadsheet file.",
         "5. Wait for the tool to generate optimized teams based on the input data.",
-        "6. Review the generated teams and export them if needed.",
-        "7. If you need further assistance, click 'See Directions' for guidance."
+        "6. Review the generated teams and export them if desired.",
+        "7. If something is not working, call Will.",
     ]
 
     # Insert each instruction as a label inside the scrollable frame
@@ -69,7 +69,7 @@ def directions_page(self):
             scrollable_frame,
             text=step,
             font=("Arial", 14),
-            wraplength=550,
+            wraplength=640,
             justify="left",
             bootstyle="dark"
         ).pack(anchor="w", pady=5, padx=20)

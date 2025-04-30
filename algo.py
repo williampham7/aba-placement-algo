@@ -2,20 +2,17 @@ import pandas as pd
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, value
 
 class TeamAssignmentOptimizer:
-    def __init__(self, file_path):
+    def __init__(self, file_path, team_pref_weight, role_pref_weight):
         self.file_path = file_path
         self.data = pd.read_csv(file_path)
         self.team_list = ['BD', 'FIN', 'MKT', 'NPO', 'STRAT']
         self.role_list = ['PM', 'SC', 'RC']
         self.prob = LpProblem("Team_Assignment_Problem", LpMaximize)
         self.assignments = []
-        # self.weights = {
-        #     'score_weight': 1,
-        #     'team_pref_weight': 1,
-        #     'role_pref_weight': 1,
-        #     'semester_weight': 1,
-        #     'year_weight': 1,
-        # }
+
+        self.team_pref_weight = team_pref_weight
+        self.role_pref_weight = role_pref_weight
+
         self.assignment_vars = None
         self.prepare_data()
 
@@ -31,13 +28,6 @@ class TeamAssignmentOptimizer:
     def solve(self, weights):
 
         # LP Problem setup
-
-        # Define weights for score, ABA semester, and year
-        score_weight = 1   # Weight for score
-        team_pref_weight = 1  # Weight for team preference
-        role_pref_weight = 1  # Weight for role preference
-        semester_weight = 1  # Weight for ABA Semester
-        year_weight = 1  # Weight for Year
 
         # Create decision variables for assigning self.data to teams and roles
         assignment = LpVariable.dicts(
@@ -89,8 +79,8 @@ class TeamAssignmentOptimizer:
                 #score_weight * float(score) +
                 # semester_weight * self.data.loc[self.data['Name'] == name, 'ABA Semester Norm'].values[0] +
                 # year_weight * self.data.loc[self.data['Name'] == name, 'School Year Norm'].values[0] +
-                team_pref_weight * team_preference_points[team][name] +
-                role_pref_weight * role_preference_points[role][name]
+                self.team_pref_weight * team_preference_points[team][name] +
+                self.role_pref_weight * role_preference_points[role][name]
             )
             for name, score in zip(self.data['Name'], self.data['Score'])
             for team in self.team_list

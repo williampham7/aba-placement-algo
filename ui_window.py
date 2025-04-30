@@ -61,7 +61,7 @@ class TeamGenerator:
             self.app,
             text="Directions & Info",
             bootstyle=PRIMARY,
-            width=20,
+            width=30,
             command=self.show_directions
         )
         directions_button.pack(pady=10)
@@ -69,10 +69,10 @@ class TeamGenerator:
         # Download template button
         download_template_button = ttk.Button(
             self.app,
-            text="Download Excel Template",
+            text="Download Template & Example",
             bootstyle=SUCCESS,
-            width=20,
-            command=self.download_template
+            width=30,
+            command=self.download_template_and_example
         )
         download_template_button.pack(pady=10)
 
@@ -81,7 +81,7 @@ class TeamGenerator:
             self.app,
             text="Generate Teams",
             bootstyle=DANGER,
-            width=20,
+            width=30,
             command=self.generate_teams
         )
         generate_teams_button.pack(pady=10)
@@ -90,18 +90,22 @@ class TeamGenerator:
         self.start_new_window()
         directions_page(self)
 
-    def download_template(self):
-        template_path = 'files/candidates_template.csv'
+    def download_template_and_example(self):
+        files_to_download = [
+            ('files/candidates_template.csv', 'candidates_template.csv'),
+            ('files/EXAMPLE_DATA-Spring2025.csv', 'EXAMPLE_DATA-Spring2025.csv')
+        ]
 
-        file_path = filedialog.asksaveasfilename(
-            defaultextension=".csv",
-            filetypes=[("CSV files", "*.csv")],
-            initialfile="candidates_template.csv",
-            title="Save Template File"
-        )
+        for template_path, default_name in files_to_download:
+            file_path = filedialog.asksaveasfilename(
+                defaultextension=".csv",
+                filetypes=[("CSV files", "*.csv")],
+                initialfile=default_name,
+                title=f"Save {default_name}"
+            )
 
-        if file_path:
-            shutil.copyfile(template_path, file_path)
+            if file_path:
+                shutil.copyfile(template_path, file_path)
 
     def generate_teams(self):
         self.start_new_window()
@@ -113,7 +117,7 @@ class TeamGenerator:
             top_frame,
             text="Upload Data",
             bootstyle=WARNING,
-            width=20,
+            width=30,
             command=self.upload_data
         )
         upload_data_button.grid(row=0, column=0, padx=10, pady=5)  # Placed at (0, 0)
@@ -124,13 +128,13 @@ class TeamGenerator:
             text="Select Input File...",
             bootstyle=INFO
         )
-        self.input_status_label.grid(row=1, column=0, padx=10, pady=5)  # Placed at (0, 1)
+        self.input_status_label.grid(row=1, column=0, padx=10, pady=3)  # Placed at (0, 1)
 
         solve_button = ttk.Button(
             top_frame,
             text="Generate Teams",
             bootstyle=DANGER,
-            width=20,
+            width=30,
             command = lambda: self.solve_lp()
         )
         solve_button.grid(row=0, column=1, padx=10, pady=5)
@@ -141,21 +145,30 @@ class TeamGenerator:
 
         # Sliders
         self.slider_frame = ttk.Frame(self.app)
-        self.slider_frame.pack(pady=10)
+        self.slider_frame.pack(pady=5)
+        
+        # Add a title to the slider frame
+        weights_title = ttk.Label(
+            self.slider_frame,
+            text="Weights",
+            font=("Helvetica", 12, "bold"),
+            anchor="center"
+        )
+        weights_title.pack()  # Add padding above and below the title
 
         # Initialize variables controlled by sliders
-        self.var1 = ttk.IntVar(value=50)
-        self.var2 = ttk.IntVar(value=50)
-        #self.var3 = ttk.IntVar(value=50)
-        #self.var4 = ttk.IntVar(value=50)
-        #self.var5 = ttk.IntVar(value=50)
+        # self.var1 = ttk.IntVar(value=3)  # Default value set to 3
+        self.var2 = ttk.IntVar(value=3)
+        self.var3 = ttk.IntVar(value=3)
+        # self.var4 = ttk.IntVar(value=3)
+        # self.var5 = ttk.IntVar(value=3)
 
         # Create sliders and labels
-        self.create_slider("Variable 1", self.var1)
-        self.create_slider("Variable 2", self.var2)
-        #self.create_slider("Variable 3", self.var3)
-        #self.create_slider("Variable 4", self.var4)
-        #self.create_slider("Variable 5", self.var5)
+        # self.create_slider("Score", self.var1)
+        self.create_slider("Team Preference", self.var2)
+        self.create_slider("Role Preference", self.var3)
+        # self.create_slider("ABA Semester", self.var4)
+        # self.create_slider("School Year", self.var5)
 
     def create_results_buttons(self):
 
@@ -166,7 +179,7 @@ class TeamGenerator:
             bottom_frame,
             text="View Results",
             bootstyle=INFO,
-            width=20,
+            width=30,
             command = lambda: self.call_display()
         )
         view_results_button.grid(row=0, column=0, padx=10, pady=5)  # Placed at (0, 0)
@@ -175,26 +188,42 @@ class TeamGenerator:
             bottom_frame,
             text="Save Results",
             bootstyle=SUCCESS,
-            width=20,
+            width=30,
             command = lambda: self.save_results(self.results)
         )
         save_results_button.grid(row=0, column=1, padx=10, pady=5)
 
     def create_slider(self, label_text, variable):
-            """Helper to create a slider with a label."""
-            label = ttk.Label(self.slider_frame, text=label_text, font=("Helvetica", 12))
-            label.pack(anchor=W, pady=(0, 5))  # Align to the left and add spacing
+        """Helper to create an integer slider with a label."""
+        label = ttk.Label(self.slider_frame, text=label_text, font=("Helvetica", 12))
+        label.pack(anchor=W, pady=(0, 5))  # Align to the left and add spacing
 
-            slider = ttk.Scale(
-                self.slider_frame,
-                from_=0,  # Minimum value
-                to=100,   # Maximum value
-                variable=variable,
-                bootstyle=INFO,  # Custom ttkbootstrap style
-                orient=HORIZONTAL,  # Horizontal slider
-                length=300
-            )
-            slider.pack(fill=X, pady=(0, 10))  # Fill the available space horizontally
+        # Frame to hold the slider and its value
+        slider_container = ttk.Frame(self.slider_frame)
+        slider_container.pack(fill=X, pady=(0, 10))  # Add spacing below the slider
+
+        slider = ttk.Scale(
+            slider_container,
+            from_=1,  # Minimum value
+            to=5,     # Maximum value
+            variable=variable,
+            bootstyle=INFO,  # Custom ttkbootstrap style
+            orient=HORIZONTAL,  # Horizontal slider
+            length=300,
+            command=lambda val: variable.set(round(float(val)))  # Snap to integers
+        )
+        slider.pack(side=LEFT, fill=X, expand=True)  # Align slider to the left
+        slider.set(variable.get())  # Set the initial value
+
+# Label to display the slider value
+        value_label = ttk.Label(slider_container, text=str(variable.get()), font=("Helvetica", 12))
+        value_label.pack(side=LEFT, padx=10)  # Place the value label to the right of the slider
+
+# Update the value label dynamically
+        def update_value_label(val):
+            value_label.config(text=str(round(float(val))))
+
+        slider.config(command=update_value_label)
 
     def upload_data(self):
         file_path = filedialog.askopenfilename(filetypes=[("Spreadsheet Files", "*.xlsx *.csv")])
@@ -206,7 +235,7 @@ class TeamGenerator:
         if self.input_path:
             try:
                 self.process_status_label.config(text="Processing...")
-                solver = TeamAssignmentOptimizer(self.input_path)
+                solver = TeamAssignmentOptimizer(self.input_path, self.var2.get(), self.var3.get())
                 self.results = solver.solve([])
                 self.process_status_label.config(text="Finished ✅")
                 self.create_results_buttons()
