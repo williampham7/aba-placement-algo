@@ -53,7 +53,7 @@ class TeamGenerator:
         self.logo.pack(side=LEFT, padx=10)  # Place the logo on the left with padding
         self.logo.image = tk_logo
 
-        self.title = ttk.Label(self.top_frame, text="Team Optimizer", foreground="black", font=("Helevetica", 32, "bold"))
+        self.title = ttk.Label(self.top_frame, text="Team Optimizer", foreground="black", font=("Microsoft YaHei UI", 32, "bold"))
         self.title.pack(side=LEFT, padx=10)  # Place the title next to the logo with padding
 
         # Directions button

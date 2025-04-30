@@ -47,7 +47,7 @@ def directions_page(self):
     header_label = tb.Label(
         scrollable_frame,
         text="Directions for Using the Team Generator Tool",
-        font=("Helvetica", 20, "bold"),
+        font=("Microsoft YaHei UI", 20, "bold"),
         bootstyle="primary"
     )
     header_label.pack(pady=10)
@@ -58,9 +58,10 @@ def directions_page(self):
         "2. Fill out the Excel template with team member details. Refer to the example for guidance.",
         "3. Save the template in a location you can easily access.",
         "4. Click 'Generate Teams' and select the filled-out spreadsheet file.",
-        "5. Wait for the tool to generate optimized teams based on the input data.",
-        "6. Review the generated teams and export them if desired.",
-        "7. If something is not working, call Will.",
+        "5. Change weights if desired (default is OK). Click Generate Teams.",
+        "6. Wait for the tool to generate optimized teams based on the input data.",
+        "7. Review the generated teams and export them if desired.",
+        "8. If something is not working, call Will.",
     ]
 
     # Insert each instruction as a label inside the scrollable frame
@@ -68,7 +69,7 @@ def directions_page(self):
         tb.Label(
             scrollable_frame,
             text=step,
-            font=("Arial", 14),
+            font=("Microsoft YaHei UI", 14),
             wraplength=640,
             justify="left",
             bootstyle="dark"
