@@ -11,3 +11,15 @@ to do list:
 - view results and save results buttobn
 - 
 '''
+
+# nuitka --standalone --macos-create-app-bundle --enable-plugin=tk-inter \
+# --include-data-dir=files=files \
+# --include-data-dir=results_page=results_page \
+# --include-data-dir=directions=directions \
+# --include-data-dir=style=style \
+# --include-module=pandas \
+# --include-module=pulp \
+# --include-module=ttkbootstrap \
+# --include-module=PIL \
+# --include-module=matplotlib \
+# main.py
