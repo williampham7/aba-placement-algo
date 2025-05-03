@@ -61,12 +61,17 @@ class TeamAssignmentOptimizer:
                     -100 * aba_norm * year_norm if role_pref == 'RC' else  # Huge loss for RC prefers any other role
                     0  # Default penalty
                 )
-                for name, role_pref, score, aba_norm, year_norm in zip(
+                # Add penalty for ABA semesters
+                - (100 if aba_semesters == 1 and role == 'PM' else  # Heavy penalty for 1 semester in PM role
+                   10 / aba_semesters if role in ['PM', 'SC'] else  # Prioritize more semesters for PM and SC
+                   0)  # No penalty for RC
+                for name, role_pref, score, aba_norm, year_norm, aba_semesters in zip(
                     self.data['Name'],
                     self.data['Role Preference'],
                     self.data['Score'],
                     self.data['ABA Semester Norm'],
-                    self.data['School Year Norm']
+                    self.data['School Year Norm'],
+                    self.data['ABA Semester']
                 )
             }
             for role in self.role_list
