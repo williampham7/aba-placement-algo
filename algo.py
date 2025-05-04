@@ -65,7 +65,7 @@ class TeamAssignmentOptimizer:
                     0  # Default penalty
                 )
                 # Add penalty for ABA semesters
-                - (100 if aba_semesters == 1 and role == 'PM' else  # Heavy penalty for 1 semester in PM role
+                - (1000 if aba_semesters == 1 and role == 'PM' else  # Heavy penalty for 1 semester in PM role
                    10 / aba_semesters if role in ['PM', 'SC'] else  # Prioritize more semesters for PM and SC
                    0)  # No penalty for RC
                 for name, role_pref, score, aba_norm, year_norm, aba_semesters in zip(
