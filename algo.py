@@ -12,6 +12,9 @@ class TeamAssignmentOptimizer:
 
         self.team_pref_weight = team_pref_weight
         self.role_pref_weight = role_pref_weight
+        self.score_weight = 1
+        self.semester_weight = 1
+        self.year_weight = 1
 
         self.assignment_vars = None
         self.prepare_data()
@@ -81,9 +84,9 @@ class TeamAssignmentOptimizer:
         prob += lpSum(
             assignment[(name, team, role)] *
             (
-                #score_weight * float(score) +
-                # semester_weight * self.data.loc[self.data['Name'] == name, 'ABA Semester Norm'].values[0] +
-                # year_weight * self.data.loc[self.data['Name'] == name, 'School Year Norm'].values[0] +
+                # self.score_weight * float(score) +
+                # self.semester_weight * self.data.loc[self.data['Name'] == name, 'ABA Semester Norm'].values[0] +
+                # self.year_weight * self.data.loc[self.data['Name'] == name, 'School Year Norm'].values[0] +
                 self.team_pref_weight * team_preference_points[team][name] +
                 self.role_pref_weight * role_preference_points[role][name]
             )
